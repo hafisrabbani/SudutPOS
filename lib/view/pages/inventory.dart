@@ -85,7 +85,14 @@ class _InventoryPageState extends State<InventoryPage> {
     );
   }
 
+  void _resetForm() {
+    _productNameController.clear();
+    _priceController.clear();
+    _stockController.clear();
+  }
+
   void _showAddProductBottomSheet(BuildContext context) {
+    _resetForm();
     showModalBottomSheet(
       context: context,
       isDismissible: true,

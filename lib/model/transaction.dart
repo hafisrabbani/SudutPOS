@@ -1,6 +1,6 @@
 enum DiscType { percent, value }
 
-class Transaction
+class TransactionRecord
 {
   int? id;
   String? customerName;
@@ -13,7 +13,7 @@ class Transaction
   double discValue;
   String createdTime;
 
-  Transaction({
+  TransactionRecord({
     this.id,
     this.customerName,
     required this.nominalPayment,
@@ -26,7 +26,7 @@ class Transaction
     required this.createdTime,
   });
 
-  factory Transaction.fromMap(Map<String, dynamic> json) => Transaction(
+  factory TransactionRecord.fromMap(Map<String, dynamic> json) => TransactionRecord(
     id: json["id"],
     customerName: json["customerName"],
     nominalPayment: json["nominalPayment"],

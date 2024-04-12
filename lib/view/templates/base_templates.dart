@@ -32,7 +32,7 @@ class _BaseTemplateState extends State<BaseTemplate> {
             bottom: Radius.circular(5),
           ),
         ),
-        backgroundColor: bgColor,
+        backgroundColor: white,
       ),
       body: _bottomNavViewModel.pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
