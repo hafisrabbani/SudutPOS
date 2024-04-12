@@ -35,19 +35,19 @@ class DatabaseHelper {
     ''');
 
     await db.execute('''
-      CREATE TABLE Transaction(
-        id INTEGER PRIMARY KEY,
-        customerName TEXT,
-        nominalPayment REAL NOT NULL,
-        total REAL NOT NULL,
-        tableNumber INTEGER NOT NULL,
-        change REAL NOT NULL,
-        cashiers TEXT NOT NULL,
-        disc_type ENUM('percent', 'value') NOT NULL,
-        disc_value REAL NOT NULL,
-        createdTime TEXT NOT NULL
-      )
-    ''');
+    CREATE TABLE TransactionRecord(
+      id INTEGER PRIMARY KEY,
+      customerName TEXT,
+      nominalPayment REAL NOT NULL,
+      total REAL NOT NULL,
+      tableNumber INTEGER NOT NULL,
+      change REAL NOT NULL,
+      cashiers TEXT NOT NULL,
+      disc_type TEXT NOT NULL,
+      disc_value REAL NOT NULL,
+      createdTime TEXT NOT NULL
+    )
+  ''');
 
     await db.execute('''
       CREATE TABLE TransactionDetail(
@@ -56,10 +56,11 @@ class DatabaseHelper {
         productId INTEGER NOT NULL,
         quantity INTEGER NOT NULL,
         price REAL NOT NULL,
-        FOREIGN KEY (transactionId) REFERENCES Transaction(id),
-        FOREIGN KEY (productId) REFERENCES Product(id)
+        FOREIGN KEY (transactionId) REFERENCES TransactionRecord(id) ON DELETE CASCADE,
+        FOREIGN KEY (productId) REFERENCES Product(id) ON DELETE CASCADE
       )
     ''');
+
 
     await db.execute('''
       CREATE TABLE AppSetting(
