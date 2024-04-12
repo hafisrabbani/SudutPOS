@@ -51,38 +51,33 @@ class ProductCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.calendar_today, size: 14, color: textColor),
-                    const SizedBox(width: 4),
-                    Text(
-                      DateFormat('dd MMMM yyyy').format(DateTime.parse(product.createdTime)),
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(width: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.inventory, size: 14, color: textColor),
-                    const SizedBox(width: 4),
-                    Text(
-                      '${product.stock} pcs',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
+                const Icon(Icons.calendar_today, size: 14, color: textColor),
+                const SizedBox(width: 4),
+                Text(
+                  DateFormat('dd MMMM yyyy').format(DateTime.parse(product.createdTime)),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Icon(Icons.inventory, size: 14, color: textColor),
+                const SizedBox(width: 4),
+                Text(
+                  '${product.stock} pcs',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 3),
             if (child != null) ...[
               const Divider(),
               child!
