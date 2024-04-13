@@ -4,12 +4,14 @@ import 'package:sudut_pos/model/product_cart.dart';
 class CounterCartButton extends StatefulWidget {
   final ProductCart product;
   final int stock;
-  final Function(ProductCart) onPressed;
+  final Function(ProductCart) onIncrement;
+  final Function(ProductCart) onDecrement;
 
   const CounterCartButton({
     required this.product,
-    required this.onPressed,
     required this.stock,
+    required this.onIncrement,
+    required this.onDecrement,
     super.key,
   });
 
@@ -39,18 +41,12 @@ class _CounterCartButtonState extends State<CounterCartButton> {
         children: [
           InkWell(
             onTap: () {
-              // setState(() {
-              //   if (_quantity > 0) _quantity--;
-              //   _controller.text = _quantity.toString();
-              // });
-              // widget.onPressed(widget.product.copyWith(qty: _quantity));
-
               if (_quantity > 0) {
                 setState(() {
                   _quantity--;
                   _controller.text = _quantity.toString();
                 });
-                widget.onPressed(widget.product.copyWith(qty: _quantity));
+                widget.onDecrement(widget.product.copyWith(qty: _quantity));
               }
             },
             child: Container(
@@ -84,7 +80,7 @@ class _CounterCartButtonState extends State<CounterCartButton> {
                   _quantity++;
                   _controller.text = _quantity.toString();
                 });
-                widget.onPressed(widget.product.copyWith(qty: _quantity));
+                widget.onIncrement(widget.product.copyWith(qty: _quantity));
               }
             },
             child: Container(

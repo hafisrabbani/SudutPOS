@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:sudut_pos/model/transaction_detail.dart';
+import 'package:provider/provider.dart';
+import 'package:sudut_pos/model/product_cart.dart';
+import 'package:sudut_pos/provider/cart_provider.dart';
 
 enum DiscType { percent, value }
 
 class CheckoutPage extends StatefulWidget {
-  final List<TransactionDetail> transactionDetails;
+  // final List<TransactionDetail> transactionDetails;
+  final List<ProductCart> carts;
 
   const CheckoutPage({
-    Key? key,
-    required this.transactionDetails,
-  }) : super(key: key);
+    super.key,
+    required this.carts,
+  });
 
   @override
   State<CheckoutPage> createState() => _CheckoutPageState();
@@ -23,10 +26,18 @@ class _CheckoutPageState extends State<CheckoutPage> {
   late TextEditingController _cashierController;
   late TextEditingController _discountController;
   late DiscType _selectedDiscType = DiscType.percent;
+  late CartProvider _cartProvider;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _cartProvider = Provider.of<CartProvider>(context);
+  }
 
   @override
   void initState() {
     super.initState();
+    print(widget.carts);
     _customerNameController = TextEditingController();
     _nominalPaymentController = TextEditingController();
     _tableNumberController = TextEditingController();
@@ -53,15 +64,15 @@ class _CheckoutPageState extends State<CheckoutPage> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: widget.transactionDetails.length,
+              itemCount: _cartProvider.carts.length,
               itemBuilder: (context, index) {
-                final detail = widget.transactionDetails[index];
+                final cart = _cartProvider.carts[index];
                 return ListTile(
-                  title: Text(detail.productId.toString()),
-                  subtitle: Text('Price: ${detail.price}, Quantity: ${detail.quantity}'),
+                  title: Text(cart.name),
+                  subtitle: Text('Price: ${cart.price}, Quantity: ${cart.qty}'),
                 );
               },
-            ),
+            )
           ),
           const Padding(
             padding: EdgeInsets.all(16.0),
