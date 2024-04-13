@@ -24,7 +24,7 @@ class MainApp extends StatelessWidget {
         ),
         home: const BaseTemplate(),
         routes: {
-          '/checkout': (context) => const CheckoutPage(transactionDetails: []),
+          '/checkout': (context) => const CheckoutPage(carts: []),
         },
       ),
     );
