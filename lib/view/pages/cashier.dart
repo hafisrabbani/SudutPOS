@@ -4,22 +4,22 @@ import 'package:sudut_pos/model/product_cart.dart';
 import 'package:sudut_pos/view/themes/colors.dart';
 import 'package:sudut_pos/view/widgets/alert.dart';
 import 'package:sudut_pos/view/widgets/search_bar.dart';
-import 'package:sudut_pos/view_model/product/product_view_model.dart';
 import 'package:sudut_pos/model/product.dart';
 import 'package:sudut_pos/view/widgets/card_product.dart';
 import 'package:sudut_pos/view/widgets/single_cart_button.dart';
 import 'package:sudut_pos/view/widgets/counter_cart_button.dart';
 import 'package:sudut_pos/provider/cart_provider.dart';
+import 'package:sudut_pos/view_model/cashier/cashier_view_model.dart';
 
 class CashierPage extends StatefulWidget {
-  const CashierPage({Key? key}) : super(key: key);
+  const CashierPage({super.key});
 
   @override
   State<CashierPage> createState() => _CashierPageState();
 }
 
 class _CashierPageState extends State<CashierPage> {
-  final ProductViewModel _productViewModel = ProductViewModel();
+  final CashierViewModel _cashierViewModel = CashierViewModel();
   final TextEditingController _searchController = TextEditingController();
 
   late CartProvider _cartProvider;
@@ -34,7 +34,7 @@ class _CashierPageState extends State<CashierPage> {
 
   void _loadProducts({String? query}) async {
     List<Product> loadedProducts =
-        await _productViewModel.fetchProducts(query: query);
+    await _cashierViewModel.fetchProducts(query: query);
     setState(() {
       products = loadedProducts;
     });
@@ -122,19 +122,19 @@ class _CashierPageState extends State<CashierPage> {
       return GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount:
-              MediaQuery.of(context).orientation == Orientation.portrait
-                  ? 2
-                  : 3,
+          MediaQuery.of(context).orientation == Orientation.portrait
+              ? 2
+              : 3,
           childAspectRatio:
-              MediaQuery.of(context).orientation == Orientation.portrait
-                  ? 0.8
-                  : 1.5,
+          MediaQuery.of(context).orientation == Orientation.portrait
+              ? 0.8
+              : 1.5,
         ),
         itemCount: products.length,
         itemBuilder: (context, index) {
           final product = products[index];
           final isInCart =
-              _cartProvider.carts.any((cart) => cart.id == product.id);
+          _cartProvider.carts.any((cart) => cart.id == product.id);
 
           return Padding(
             padding: const EdgeInsets.all(8),
@@ -142,24 +142,28 @@ class _CashierPageState extends State<CashierPage> {
               product: product,
               child: isInCart
                   ? CounterCartButton(
-                      product: _cartProvider.carts
-                          .firstWhere((cart) => cart.id == product.id),
-                      stock: product.stock,
-                      onIncrement: (cart) { _onIncrement(cart); },
-                      onDecrement: (cart) { _onDecrement(cart); },
-                    )
+                product: _cartProvider.carts
+                    .firstWhere((cart) => cart.id == product.id),
+                stock: product.stock,
+                onIncrement: (cart) {
+                  _onIncrement(cart);
+                },
+                onDecrement: (cart) {
+                  _onDecrement(cart);
+                },
+              )
                   : SingleCartButton(
-                      product: ProductCart(
-                        id: product.id ?? 0,
-                        name: product.name,
-                        price: product.price,
-                        createdTime: product.createdTime,
-                        updatedTime: product.updatedTime,
-                        stock: product.stock,
-                        qty: 0,
-                      ),
-                      onPressed: _addToCart,
-                    ),
+                product: ProductCart(
+                  id: product.id ?? 0,
+                  name: product.name,
+                  price: product.price,
+                  createdTime: product.createdTime,
+                  updatedTime: product.updatedTime,
+                  stock: product.stock,
+                  qty: 0,
+                ),
+                onPressed: _addToCart,
+              ),
             ),
           );
         },
@@ -186,7 +190,6 @@ class _CashierPageState extends State<CashierPage> {
       );
     }
   }
-
 
   void _onIncrement(ProductCart productCart) {
     final int availableStock =

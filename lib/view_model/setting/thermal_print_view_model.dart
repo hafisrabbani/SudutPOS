@@ -31,6 +31,16 @@ class SettingThermalPrint {
     }
   }
 
+  Future<bool?> checkConnection() async{
+    bool? isConnected = await printer!.isConnected;
+    if(isConnected == true){
+      _isConnected = true;
+    } else {
+      _isConnected = false;
+    }
+    return await printer!.isConnected;
+  }
+
   Future<void> print(String s) async {
     if (_isConnected) {
       printer!.printNewLine();

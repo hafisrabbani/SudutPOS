@@ -37,14 +37,12 @@ class DatabaseHelper {
     await db.execute('''
     CREATE TABLE TransactionRecord(
       id INTEGER PRIMARY KEY,
-      customerName TEXT,
       nominalPayment REAL NOT NULL,
       total REAL NOT NULL,
       tableNumber INTEGER NOT NULL,
       change REAL NOT NULL,
-      cashiers TEXT NOT NULL,
-      disc_type TEXT NOT NULL,
-      disc_value REAL NOT NULL,
+      discType TINYINT NOT NULL,
+      discValue REAL NOT NULL,
       createdTime TEXT NOT NULL
     )
   ''');

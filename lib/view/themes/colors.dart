@@ -8,3 +8,4 @@ const Color mutedColor = Color(0xFFBFC2CC);
 const Color white = Color(0xFFFFFFFF);
 const Color dangerColor = Color(0xFFD32F2F);
 const Color successColor = Color(0xFF4CAF50);
+const Color warningColor = Color(0xFFFFA000);

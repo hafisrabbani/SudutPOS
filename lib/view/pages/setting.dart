@@ -4,7 +4,7 @@ import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import '../../view_model/setting/thermal_print_view_model.dart';
 
 class SettingPage extends StatefulWidget {
-  const SettingPage({super.key});
+  const SettingPage({Key? key}) : super(key: key);
 
   @override
   _SettingPageState createState() => _SettingPageState();
@@ -25,9 +25,12 @@ class _SettingPageState extends State<SettingPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Setting Page'),
+        backgroundColor: Colors.blue, // Ubah warna latar belakang app bar
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(20.0), // Tambahkan padding pada semua sisi
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch, // Letakkan elemen-elemen sepanjang lebar kolom
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             DropdownButton<BluetoothDevice>(
@@ -54,22 +57,45 @@ class _SettingPageState extends State<SettingPage> {
                     viewModel.getDevices(); // Refresh devices
                   },
                   child: const Text('Refresh Devices'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue, // Ubah warna tombol refresh
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15), // Atur padding
+                  ),
                 ),
                 ElevatedButton(
                   onPressed: () async {
                     await viewModel.toggleConnection();
-                    setState(() {}); // Update state after connection toggled
+                    setState(() {});
                   },
                   child: Text(viewModel.isConnected ? 'Disconnect' : 'Connect'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: viewModel.isConnected ? Colors.red : Colors.green, // Warna tombol connect/disconnect
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15), // Atur padding
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                viewModel.print('Hello World');
+                // check connection
+                viewModel.checkConnection().then((value) {
+                  if (value!) {
+                    viewModel.print('Hello World');
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Please select and connect to a device.'),
+                      ),
+                    );
+                  }
+                });
               },
               child: const Text('Print'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue, // Warna tombol print
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15), // Atur padding
+              ),
             ),
           ],
         ),

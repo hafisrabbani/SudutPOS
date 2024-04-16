@@ -28,4 +28,24 @@ class TransactionDetail {
     'quantity': quantity,
     'price': price,
   };
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'transactionId': transactionId,
+      'productId': productId,
+      'quantity': quantity,
+      'price': price,
+    };
+  }
+
+factory TransactionDetail.fromMap(Map<String, dynamic> map) {
+    return TransactionDetail(
+      id: map['id'],
+      transactionId: map['transactionId'],
+      productId: map['productId'],
+      quantity: map['quantity'],
+      price: map['price'],
+    );
+  }
 }
