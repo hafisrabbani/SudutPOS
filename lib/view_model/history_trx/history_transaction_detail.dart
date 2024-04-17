@@ -8,27 +8,27 @@ class HistoryTransactionDetailViewModel {
 
   Future<Map<String, dynamic>> getTransactionDetails(int transactionId) async {
     final Map<String, dynamic> result = {};
-    Map<String, dynamic> transactionItems = {};
 
     Map<String, dynamic> transaction =
-        await _transactionQuery.selectById(transactionId);
+    await _transactionQuery.selectById(transactionId);
     final List<TransactionDetail> transactionDetails =
-        await _transactionQuery.getTransactionDetails(transactionId);
+    await _transactionQuery.getTransactionDetails(transactionId);
     result['transaction'] = transaction;
+    result['details'] = [];
+
     for (TransactionDetail detail in transactionDetails) {
       final Map<String, dynamic> product =
-          await _productQuery.selectById(detail.productId);
-      transactionItems = {
+      await _productQuery.selectById(detail.productId);
+      result['details'].add({
         'id': detail.id,
         'productId': detail.productId,
         'productName': product['name'],
         'quantity': detail.quantity,
         'price': detail.price,
-      };
-
-      result['details'] = transactionItems;
+      });
     }
 
     return result;
   }
 }
+

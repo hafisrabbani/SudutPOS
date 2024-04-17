@@ -9,7 +9,7 @@ import 'package:sudut_pos/view/pages/setting.dart';
 
 class BottomNavViewModel{
   final List<Widget> pages = [
-    const Testinggg(),
+    HomePage(),
     const CashierPage(),
     const InventoryPage(),
     SettingPage(),

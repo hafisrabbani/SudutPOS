@@ -6,6 +6,7 @@ import 'package:sudut_pos/view/widgets/alert.dart';
 import 'package:sudut_pos/view/widgets/search_bar.dart';
 import 'package:sudut_pos/model/product.dart';
 import 'package:sudut_pos/view/widgets/card_product.dart';
+import 'package:sudut_pos/view/widgets/shopping_cart.dart';
 import 'package:sudut_pos/view/widgets/single_cart_button.dart';
 import 'package:sudut_pos/view/widgets/counter_cart_button.dart';
 import 'package:sudut_pos/provider/cart_provider.dart';
@@ -34,7 +35,7 @@ class _CashierPageState extends State<CashierPage> {
 
   void _loadProducts({String? query}) async {
     List<Product> loadedProducts =
-    await _cashierViewModel.fetchProducts(query: query);
+        await _cashierViewModel.fetchProducts(query: query);
     setState(() {
       products = loadedProducts;
     });
@@ -56,21 +57,31 @@ class _CashierPageState extends State<CashierPage> {
               children: [
                 Expanded(
                   child: CustomSearchBar(
-                    controller: _searchController,
-                    hintText: 'Search...',
-                    onChanged: (value) {
-                      Future.delayed(const Duration(milliseconds: 500), () {
-                        _loadProducts(query: value);
-                      });
-                    },
-                    onClear: () {
-                      _searchController.clear();
-                      _loadProducts(query: null);
-                    },
-                    onSearch: () {
-                      _loadProducts(query: _searchController.text);
-                    },
-                  ),
+                      controller: _searchController,
+                      hintText: 'Search...',
+                      onChanged: (value) {
+                        Future.delayed(const Duration(milliseconds: 500), () {
+                          _loadProducts(query: value);
+                        });
+                      },
+                      onClear: () {
+                        _searchController.clear();
+                        _loadProducts(query: null);
+                      },
+                      child: ShoppingCartButton(
+                          itemCount: _cartProvider.carts.length,
+                          onPressed: () {
+                            if (_cartProvider.carts.isEmpty) {
+                              CustomAlert.show(
+                                context,
+                                'Empty Cart',
+                                'Please add some products to the cart.',
+                              );
+                            } else {
+                              Navigator.pushNamed(context, '/checkout',
+                                  arguments: _cartProvider.carts);
+                            }
+                          })),
                 ),
               ],
             ),
@@ -78,35 +89,6 @@ class _CashierPageState extends State<CashierPage> {
           Expanded(child: _buildProductGrid()),
         ],
       ),
-      floatingActionButton: SizedBox(
-        width: 200,
-        child: ElevatedButton.icon(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: primaryColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-          onPressed: () {
-            if (_cartProvider.carts.isEmpty) {
-              CustomAlert.show(
-                context,
-                'Empty Cart',
-                'Please add some products to the cart.',
-              );
-            } else {
-              Navigator.pushNamed(context, '/checkout',
-                  arguments: _cartProvider.carts);
-            }
-          },
-          icon: const Icon(Icons.shopping_cart, color: white),
-          label: Text(
-            'Checkout (${_cartProvider.carts.length})',
-            style: const TextStyle(color: white),
-          ),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
@@ -122,19 +104,19 @@ class _CashierPageState extends State<CashierPage> {
       return GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount:
-          MediaQuery.of(context).orientation == Orientation.portrait
-              ? 2
-              : 3,
+              MediaQuery.of(context).orientation == Orientation.portrait
+                  ? 2
+                  : 3,
           childAspectRatio:
-          MediaQuery.of(context).orientation == Orientation.portrait
-              ? 0.8
-              : 1.5,
+              MediaQuery.of(context).orientation == Orientation.portrait
+                  ? 0.8
+                  : 1.5,
         ),
         itemCount: products.length,
         itemBuilder: (context, index) {
           final product = products[index];
           final isInCart =
-          _cartProvider.carts.any((cart) => cart.id == product.id);
+              _cartProvider.carts.any((cart) => cart.id == product.id);
 
           return Padding(
             padding: const EdgeInsets.all(8),
@@ -142,28 +124,38 @@ class _CashierPageState extends State<CashierPage> {
               product: product,
               child: isInCart
                   ? CounterCartButton(
-                product: _cartProvider.carts
-                    .firstWhere((cart) => cart.id == product.id),
-                stock: product.stock,
-                onIncrement: (cart) {
-                  _onIncrement(cart);
-                },
-                onDecrement: (cart) {
-                  _onDecrement(cart);
-                },
-              )
+                      product: _cartProvider.carts
+                          .firstWhere((cart) => cart.id == product.id),
+                      stock: product.stock,
+                      onIncrement: (cart) {
+                        _onIncrement(cart);
+                      },
+                      onDecrement: (cart) {
+                        _onDecrement(cart);
+                      },
+                    )
                   : SingleCartButton(
-                product: ProductCart(
-                  id: product.id ?? 0,
-                  name: product.name,
-                  price: product.price,
-                  createdTime: product.createdTime,
-                  updatedTime: product.updatedTime,
-                  stock: product.stock,
-                  qty: 0,
-                ),
-                onPressed: _addToCart,
-              ),
+                      product: ProductCart(
+                        id: product.id ?? 0,
+                        name: product.name,
+                        price: product.price,
+                        createdTime: product.createdTime,
+                        updatedTime: product.updatedTime,
+                        stock: product.stock,
+                        qty: 0,
+                      ),
+                      onPressed: (productCart) {
+                        if (productCart.stock > 0) {
+                          _addToCart(productCart);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Out of stock'),
+                                duration: Duration(seconds: 1)),
+                          );
+                        }
+                      },
+                    ),
             ),
           );
         },

@@ -361,9 +361,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => SuccessPage(
-                transactionId: trxId,
-                  subtotal: 10000, grandTotal: 10000, change: 0),
+              builder: (context) => SuccessPage(transactionId: trxId),
             ),
           );
         } else {

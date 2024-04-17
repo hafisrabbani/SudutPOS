@@ -6,15 +6,14 @@ class CustomSearchBar extends StatelessWidget {
   final String hintText;
   final void Function(String) onChanged;
   final void Function() onClear;
-  final void Function() onSearch;
-
+  final Widget? child;
   const CustomSearchBar({
     Key? key,
     required this.controller,
     required this.hintText,
     required this.onChanged,
     required this.onClear,
-    required this.onSearch,
+    this.child,
   }) : super(key: key);
 
   @override
@@ -56,10 +55,7 @@ class CustomSearchBar extends StatelessWidget {
             onPressed: onClear,
             icon: const Icon(Icons.clear),
           ),
-          IconButton(
-            onPressed: onSearch,
-            icon: const Icon(Icons.search),
-          ),
+          if (child != null) child!,
         ],
       ),
     );

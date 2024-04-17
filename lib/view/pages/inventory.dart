@@ -61,9 +61,6 @@ class _InventoryPageState extends State<InventoryPage> {
                       onClear: () {
                         _searchController.clear();
                         _loadProducts(query: null);
-                      },
-                      onSearch: () {
-                        _loadProducts(query: _searchController.text);
                       }),
                 ),
               ],
@@ -76,7 +73,8 @@ class _InventoryPageState extends State<InventoryPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _showAddProductBottomSheet(context);
+          // _showAddProductBottomSheet(context);
+          _showModalProduct(context);
         },
         backgroundColor: primaryColor,
         tooltip: 'Add Product',
@@ -91,51 +89,50 @@ class _InventoryPageState extends State<InventoryPage> {
     _stockController.clear();
   }
 
-  void _showAddProductBottomSheet(BuildContext context) {
-    _resetForm();
-    showModalBottomSheet(
+  void _showModalProduct(BuildContext context) {
+    showDialog(
       context: context,
-      isDismissible: true,
       builder: (context) {
-        return CustomBottomSheet(
-          isDismissible: false,
-          child: Padding(
-            padding: const EdgeInsets.all(10).copyWith(
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                CustomTextField(
+        // form input
+        return AlertDialog(
+          title: const Text('Add Product'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: _productNameController,
+                decoration: const InputDecoration(
                   labelText: 'Product Name',
-                  controller: _productNameController,
-                  prefixIcon: Icons.shopping_bag,
-                  keyboardType: TextInputType.text,
                 ),
-                const SizedBox(height: 10),
-                CustomTextField(
+              ),
+              TextField(
+                controller: _priceController,
+                decoration: const InputDecoration(
                   labelText: 'Price',
-                  controller: _priceController,
-                  prefixIcon: Icons.money,
-                  keyboardType: TextInputType.number,
                 ),
-                const SizedBox(height: 20),
-                CustomTextField(
+              ),
+              TextField(
+                controller: _stockController,
+                decoration: const InputDecoration(
                   labelText: 'Stock',
-                  controller: _stockController,
-                  prefixIcon: Icons.shopping_cart,
-                  keyboardType: TextInputType.number,
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    _addProduct(context);
-                  },
-                  child: const Text('Add'),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                _addProduct(context);
+              },
+              child: const Text('Add'),
+            ),
+          ],
         );
       },
     );
