@@ -92,9 +92,35 @@ class SettingThermalPrint {
       printer!.printCustom('Change : ${CommonUtils().cvIDRCurrency(transactionData['change'])}', 1, 0);
       printer!.printNewLine();
       printer!.printNewLine();
-      printer!.printCustom('Terima kasih', 1, 0);
-      printer!.printCustom('Sudah belanja di Sudut Cafe', 1, 0);
-      printer!.printCustom('powered by dampek', 1, 0);
+      printer!.printCustom('Terima kasih', 1, 1);
+      printer!.printCustom('Sudah belanja di Sudut Cafe', 1, 1);
+      printer!.printCustom('powered by SudutPOS', 1, 1);
+      printer!.paperCut();
+    } else {
+      print('Please select and connect to a device.');
+    }
+  }
+
+  Future<void> printReceiptStaff(Map<String, dynamic> data) async {
+    if (_isConnected) {
+      final transactionData = data['transaction'];
+      final detailsData = data['details'];
+      printer!.printLeftRight('ID Trx :',
+          '${transactionData['id']}', 1);
+      printer!
+          .printLeftRight('Table Number : ',
+          '${transactionData['tableNumber']}', 0);
+      printer!
+          .printCustom('Trx Time : ${DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.parse(transactionData['createdTime']))}', 0, 0);
+      printer!.printNewLine();
+      printer!.printCustom('Item : ', 1, 0);
+      detailsData.forEach((detail) {
+        printer!.printCustom('${detail['productName']}', 1, 0);
+        printer!.printLeftRight('${detail['quantity']} pcs ',
+            CommonUtils().cvIDRCurrency(detail['price']), 0);
+        printer!.printNewLine();
+      });
+      printer!.printNewLine();
       printer!.paperCut();
     } else {
       print('Please select and connect to a device.');

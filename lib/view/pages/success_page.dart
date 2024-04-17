@@ -89,7 +89,7 @@ class _SuccessPageState extends State<SuccessPage> {
                     Expanded(
                       child: CustomButton(
                         onPressed: () {
-                          Navigator.pop(context);
+                          _printReceiptStaff(context);
                         },
                         label: 'Print For Staff',
                         btnColor: warningColor,
@@ -122,6 +122,20 @@ class _SuccessPageState extends State<SuccessPage> {
     _settingThermalPrint.checkConnection().then((value) {
       if (value!) {
         _settingThermalPrint.printReceipt(transaction);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to connect to printer'),
+          ),
+        );
+      }
+    });
+  }
+
+  void _printReceiptStaff(BuildContext context) {
+    _settingThermalPrint.checkConnection().then((value) {
+      if (value!) {
+        _settingThermalPrint.printReceiptStaff(transaction);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

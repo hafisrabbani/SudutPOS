@@ -23,14 +23,10 @@ class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Setting Page'),
-        backgroundColor: Colors.blue, // Ubah warna latar belakang app bar
-      ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0), // Tambahkan padding pada semua sisi
+        padding: const EdgeInsets.all(20.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch, // Letakkan elemen-elemen sepanjang lebar kolom
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             DropdownButton<BluetoothDevice>(
@@ -54,11 +50,11 @@ class _SettingPageState extends State<SettingPage> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    viewModel.getDevices(); // Refresh devices
+                    viewModel.getDevices();
                   },
                   child: const Text('Refresh Devices'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue, // Ubah warna tombol refresh
+                    backgroundColor: Colors.blue,
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15), // Atur padding
                   ),
                 ),
@@ -78,7 +74,6 @@ class _SettingPageState extends State<SettingPage> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // check connection
                 viewModel.checkConnection().then((value) {
                   if (value!) {
                     viewModel.print('Hello World');
